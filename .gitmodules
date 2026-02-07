@@ -1,0 +1,6 @@
+[submodule "externals/qdash"]
+	path = externals/qdash
+	url = https://github.com/oqtopus-team/qdash.git
+[submodule "externals/qubex"]
+	path = externals/qubex
+	url = https://github.com/amachino/qubex.git
