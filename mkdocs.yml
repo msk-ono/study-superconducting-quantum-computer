@@ -44,6 +44,11 @@ markdown_extensions:
   - pymdownx.snippets
   - pymdownx.arithmatex:
       generic: true
+  - attr_list
+  - md_in_html
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
 
 extra_javascript:
   - javascripts/mathjax.js
@@ -53,9 +58,12 @@ extra_javascript:
 
 nav:
   - Home: index.md
-  - Quantum:
-    - Overview: quantum/overview.md
-    - Principles: quantum/principle.md
-    - Rabi Oscillations: quantum/rabi.md
-    - Bloch Sphere: quantum/bloch.md
-    - Calibration: quantum/calibration.md
+  - Basic:
+    - Overview: basic/index.md
+    - Bloch Sphere: basic/bloch.md
+  - Superconducting:
+    - Overview: superconducting/index.md
+    - Principles: superconducting/principle.md
+  - Calibration:
+    - Overview: calibration/index.md
+    - Rabi Oscillations: calibration/rabi.md

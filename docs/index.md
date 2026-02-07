@@ -1,16 +1,39 @@
-# 超伝導量子コンピュータ入門 (Introduction to Superconducting Quantum Computers)
+# 超伝導量子コンピュータ学習ノート
 
-このサイトでは、超伝導量子コンピュータについての学習ノートをまとめていきます。
+超伝導回路を用いた量子コンピュータの仕組み、理論、そして実機でのキャリブレーション手法について学んだ内容をまとめています。
 
-## 今後の予定
+<div class="grid cards" markdown>
 
-- 超伝導量子ビットの理論
-- 制御・読み出し手法
-- キャリブレーション
-- 実機での実験 (IBM Quantum 等)
+-   :material-book-open-variant:{ .lg .middle } __量子理論の基礎__
 
-## 数式のテスト
+    ---
 
-シュレーディンガー方程式:
+    量子ビットの状態表示やブロッホ球、量子ゲートの数学的基礎について。
 
-$$ i\hbar \frac{\partial}{\partial t} |\psi(t)\rangle = \hat{H} |\psi(t)\rangle $$
+    [:octicons-arrow-right-24: 基礎理論を読む](basic/index.md)  
+    [:octicons-arrow-right-24: ブロッホ球を見る](basic/bloch.md)
+
+-   :material-chip:{ .lg .middle } __超伝導量子技術__
+
+    ---
+
+    超伝導回路による量子ビットの実現方法や動作原理について。
+
+    [:octicons-arrow-right-24: 技術概要を読む](superconducting/index.md)  
+    [:octicons-arrow-right-24: 動作原理を学ぶ](superconducting/principle.md)
+
+-   :material-tune-vertical:{ .lg .middle } __キャリブレーション__
+
+    ---
+
+    量子ビットを制御・最適化するための測定や調整手法について。
+
+    [:octicons-arrow-right-24: 手法一覧を見る](calibration/index.md)  
+    [:octicons-arrow-right-24: ラビ振動](calibration/rabi.md)
+
+</div>
+
+## コンテンツについて
+
+このドキュメントは学習過程を記録したものであり、必要に応じて随時更新・修正を行っています。
+インタラクティブなデモ（ブロッホ球のシミュレーション等）も順次追加予定です。
