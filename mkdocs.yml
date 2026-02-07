@@ -1,0 +1,60 @@
+site_name: Superconducting Quantum Computer Study
+site_description: Personal study notes on superconducting quantum computers.
+site_author: msk-ono
+
+repo_name: msk-ono/internal-note
+repo_url: https://github.com/msk-ono/internal-note
+
+theme:
+  name: material
+  language: ja
+  palette:
+    # Light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to dark mode
+    # Dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/weather-night
+        name: Switch to light mode
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - toc.follow
+    - content.code.copy
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.arithmatex:
+      generic: true
+
+extra_javascript:
+  - javascripts/mathjax.js
+  - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+
+nav:
+  - Home: index.md
+  - Quantum:
+    - Overview: quantum/overview.md
+    - Principles: quantum/principle.md
+    - Rabi Oscillations: quantum/rabi.md
+    - Bloch Sphere: quantum/bloch.md
+    - Calibration: quantum/calibration.md
