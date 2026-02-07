@@ -1,5 +1,5 @@
 [project]
-name = "Internal Note"
+name = "internal-note"
 version = "0.1.0"
 description = "Study notes for superconducting quantum computers"
 readme = "README.md"

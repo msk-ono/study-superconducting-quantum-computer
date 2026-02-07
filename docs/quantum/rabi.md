@@ -4,6 +4,6 @@
 
 ## ラビ周波数
 
-$$ \Omega = \frac{\mu E}{\hbar} $$
+$$\Omega = \frac{\mu E}{\hbar}$$
 
 (詳細は後日追記)
