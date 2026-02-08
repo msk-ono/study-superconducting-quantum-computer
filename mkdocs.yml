@@ -1,9 +1,10 @@
-site_name: Superconducting Quantum Computer Study
-site_description: Personal study notes on superconducting quantum computers.
+site_name: 超伝導量子コンピュータ学習ノート
+site_url: https://msk-ono.github.io/study-superconducting-quantum-computer/
+site_description: 超伝導量子コンピュータに関する物理原理やキャリブレーション手法をまとめた個人用勉強ノート。
 site_author: msk-ono
 
-repo_name: msk-ono/internal-note
-repo_url: https://github.com/msk-ono/internal-note
+repo_name: msk-ono/study-superconducting-quantum-computer
+repo_url: https://github.com/msk-ono/study-superconducting-quantum-computer
 
 theme:
   name: material

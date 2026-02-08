@@ -63,15 +63,28 @@ body {
     /* Increased breathing room */
 }
 
-/* Add a subtle paper-like background pattern to the main content for "study note" feel */
+/* Add a very subtle paper-like background pattern to the main content */
 .md-content {
     background-image:
-        linear-gradient(rgba(0, 172, 193, 0.05) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 172, 193, 0.05) 1px, transparent 1px);
-    background-size: 50px 50px;
-    /* Large subtle grid reminding of laboratory notebooks */
+        linear-gradient(rgba(0, 172, 193, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 172, 193, 0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    /* Laboratory notebook grid */
     background-attachment: local;
     border-radius: 8px;
+    padding: 1.5rem;
+}
+
+/* Home page card styling */
+.md-typeset .grid.cards> :is(ul, ol)>li {
+    border: 1px solid rgba(0, 172, 193, 0.1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.md-typeset .grid.cards> :is(ul, ol)>li:hover {
+    border-color: var(--md-accent-fg-color);
+    box-shadow: 0 4px 12px rgba(0, 172, 193, 0.15);
+    transform: translateY(-2px);
 }
 
 /* =========================================
