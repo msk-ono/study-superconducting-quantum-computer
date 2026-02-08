@@ -580,8 +580,8 @@ window.randomError = function () {
     injectError(qubit, errorType);
 };
 
-// Initialize when DOM is ready
-document.addEventListener("DOMContentLoaded", function () {
+// Initialize when DOM is ready or after navigation.instant transition
+document$.subscribe(() => {
     if (document.getElementById("qec-visualizer-container")) {
         initQECVisualizer();
     }

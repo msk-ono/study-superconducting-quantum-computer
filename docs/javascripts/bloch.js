@@ -51,7 +51,7 @@ const GATES = {
 let sphereArrow;
 let renderer, scene, camera;
 
-document.addEventListener("DOMContentLoaded", function () {
+document$.subscribe(() => {
     const container = document.getElementById("bloch-sphere-container");
     if (!container) return;
 

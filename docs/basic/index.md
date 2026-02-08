@@ -33,14 +33,16 @@ $$
 量子力学では、ポール・ディラックによって導入された**ブラ・ケット記法**が広く用いられます。
 
 - **ケットベクトル ($| \psi \rangle$)**: 列ベクトルを表します。量子状態記述します。
-  $$
-  |0\rangle = \begin{bmatrix} 1 \\ 0 \end{bmatrix}, \quad |1\rangle = \begin{bmatrix} 0 \\ 1 \end{bmatrix}
-  $$
+
+    $$
+    |0\rangle = \begin{bmatrix} 1 \\ 0 \end{bmatrix}, \quad |1\rangle = \begin{bmatrix} 0 \\ 1 \end{bmatrix}
+    $$
 
 - **ブラベクトル ($\langle \psi |$)**: ケットベクトルの随伴（転置複素共役）を表します。行ベクトルになります。
-  $$
-  \langle \psi | = |\psi\rangle^\dagger = (\alpha |0\rangle + \beta |1\rangle)^\dagger = \alpha^* \langle 0 | + \beta^* \langle 1 |
-  $$
+
+    $$
+    \langle \psi | = |\psi\rangle^\dagger = (\alpha |0\rangle + \beta |1\rangle)^\dagger = \alpha^* \langle 0 | + \beta^* \langle 1 |
+    $$
 
 - **内積 ($\langle \phi | \psi \rangle$)**: 2つの状態の重なり具合（スカラー値）を表します。正規直交基底であれば、$\langle 0 | 0 \rangle = 1, \langle 0 | 1 \rangle = 0$ となります。
 

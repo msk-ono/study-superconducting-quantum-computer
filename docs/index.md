@@ -74,7 +74,7 @@ search:
 
     [:material-monitor-dashboard: QDash](software/qdash.md)  
     [:material-server: Qubex](software/qubex.md)  
-    [:material-python: scqubits](software/scqubits.md)  
+    [:material-language-python: scqubits](software/scqubits.md)  
     [:material-vector-polyline: SQCircuit](software/sqcircuit.md)
 
 </div>
