@@ -65,6 +65,14 @@ document$.subscribe(() => {
 });
 
 function initThreeJS(container) {
+    // Cleanup if already exists
+    if (renderer) {
+        renderer.dispose();
+        if (renderer.domElement && renderer.domElement.parentNode) {
+            renderer.domElement.parentNode.removeChild(renderer.domElement);
+        }
+    }
+
     container.innerHTML = "";
     scene = new THREE.Scene();
     scene.background = new THREE.Color(0xf0f0f0); // Match container
@@ -198,7 +206,17 @@ function updateUI() {
 
     // Re-render math if MathJax is present
     if (window.MathJax && window.MathJax.typesetPromise) {
-        window.MathJax.typesetPromise([svDisplay, document.getElementById("matrix-display")]);
+        // Wrap in startup promise if available
+        const runTypeset = () => {
+            window.MathJax.typesetPromise([svDisplay, document.getElementById("matrix-display")])
+                .catch(e => console.warn("MathJax update failed", e));
+        };
+
+        if (window.MathJax.startup && window.MathJax.startup.promise) {
+            window.MathJax.startup.promise.then(runTypeset);
+        } else {
+            runTypeset();
+        }
     }
 }
 

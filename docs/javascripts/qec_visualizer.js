@@ -7,12 +7,26 @@ window.simulator = null;
 window.currentCode = "repetition_3";
 
 // Initialize when WASM module is ready
+let isWasmInitialized = false;
+
 async function initQECVisualizer() {
+    if (isWasmInitialized && window.simulator) {
+        console.log("QEC Visualizer already initialized, resetting simulator.");
+        try {
+            window.simulator.reset(window.currentCode);
+            updateDisplay();
+            return;
+        } catch (e) {
+            console.warn("Retrying full initialization...", e);
+        }
+    }
+
     try {
-        // Import the WASM module
-        // When using --target web, the default export is the init function
+        console.log("Loading WASM module...");
+        // Use relative path from the current script
         const module = await import('./qec_sim.js');
         await module.default();
+        isWasmInitialized = true;
 
         // Make module available globally for debugging
         window.qecModule = module;
@@ -22,16 +36,18 @@ async function initQECVisualizer() {
 
         console.log("QEC Visualizer initialized successfully");
 
-        // Small delay to ensure container dimensions are ready
+        // Use a small delay to ensure container dimensions are ready
         setTimeout(() => {
             updateDisplay();
-        }, 100);
+        }, 150);
 
     } catch (error) {
         console.error("Failed to initialize QEC visualizer:", error);
-        document.getElementById("qec-error").textContent =
-            `Error loading WASM module: ${error.message}`;
-        document.getElementById("qec-error").style.display = "block";
+        const errorEl = document.getElementById("qec-error");
+        if (errorEl) {
+            errorEl.textContent = `Error loading WASM module: ${error.message}`;
+            errorEl.style.display = "block";
+        }
     }
 }
 
