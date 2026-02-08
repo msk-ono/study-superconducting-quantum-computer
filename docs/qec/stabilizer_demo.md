@@ -35,17 +35,29 @@
             <h3>Tanner グラフ (パリティチェック)</h3>
             <div class="legend-box">
                 <strong>🔗 凡例:</strong>
-                <span class="legend-item">⚪ 量子ビット (物理)</span>
-                <span class="legend-item">⬜ スタビライザー (チェック)</span>
+                <span class="legend-item">⚪ 量子ビット (物理) / ⬜ スタビライザー (チェック)</span>
                 <span class="legend-item">
-                    <span style="color: #ef5350; font-weight: bold;">━━</span> X相互作用 /
-                    <span style="color: #66bb6a; font-weight: bold;">━━</span> Y相互作用 /
-                    <span style="color: #42a5f5; font-weight: bold;">━━</span> Z相互作用
+                    <span style="color: #ef5350; font-weight: bold;">━━</span> X /
+                    <span style="color: #66bb6a; font-weight: bold;">━━</span> Y /
+                    <span style="color: #42a5f5; font-weight: bold;">━━</span> Z 相互作用
                 </span>
-                <span class="legend-item">⚡ <strong>エラー検出時:</strong> エッジが太く光って点滅 (色はそのまま)</span>
+                <hr style="margin: 8px 0; border: none; border-top: 1px solid #eee;">
+                <span class="legend-item">🔴 <strong>エラー注入:</strong> 量子ビットが赤く光り、そこから影響を受けるチェックへの線が点滅します。</span>
             </div>
-            <div id="tanner-graph-container" style="background: white; border-radius: 8px; padding: 20px; margin: 16px 0; min-height: 300px; display: flex; justify-content: center; align-items: center; border: 1px solid #e0e0e0;">
-                <svg id="tanner-graph-svg" width="100%" height="400" style="overflow: visible;"></svg>
+
+            <div class="tanner-graphs-wrapper" style="display: flex; gap: 16px; flex-wrap: wrap; margin: 16px 0;">
+                <div style="flex: 1; min-width: 350px;">
+                    <h4 style="text-align: center; margin-bottom: 8px; color: #ef5350;">X-checks (位相反転 Z エラー等を検出)</h4>
+                    <div id="tanner-graph-container-x" class="tanner-graph-container">
+                        <svg id="tanner-graph-svg-x" width="100%" height="300" style="overflow: visible;"></svg>
+                    </div>
+                </div>
+                <div style="flex: 1; min-width: 350px;">
+                    <h4 style="text-align: center; margin-bottom: 8px; color: #42a5f5;">Z-checks (ビット反転 X エラー等を検出)</h4>
+                    <div id="tanner-graph-container-z" class="tanner-graph-container">
+                        <svg id="tanner-graph-svg-z" width="100%" height="300" style="overflow: visible;"></svg>
+                    </div>
+                </div>
             </div>
 
             <h3>シンドローム</h3>

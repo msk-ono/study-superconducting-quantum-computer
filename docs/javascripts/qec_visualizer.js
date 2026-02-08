@@ -41,159 +41,161 @@ function updateDisplay() {
 
     updateStabilizers();
     updateSyndrome();
-    updateTannerGraph();
+    updateTannerGraph("tanner-graph-svg-x", "X");
+    updateTannerGraph("tanner-graph-svg-z", "Z");
     updateCodeInfo();
     updateErrorControls();
 }
 
 // Update Tanner graph visualization using SVG
-function updateTannerGraph() {
-    const svg = document.getElementById("tanner-graph-svg");
+function updateTannerGraph(targetSvgId, typeFilter) {
+    const svg = document.getElementById(targetSvgId);
     if (!svg) {
-        console.error("SVG element not found!");
+        console.warn(`SVG element ${targetSvgId} not found!`);
         return;
     }
 
     // Clear SVG
     svg.innerHTML = "";
 
-    const stabilizers = JSON.parse(window.simulator.getStabilizers());
+    const stabilizersRaw = JSON.parse(window.simulator.getStabilizers());
     const triggered = window.simulator.getTriggeredStabilizers();
     const nQubits = window.simulator.n_qubits;
-    const nStabs = stabilizers.length;
 
-    console.log("=== Tanner Graph Rendering ===");
-    console.log("Raw stabilizers from Rust:", stabilizers);
-    console.log(`nQubits: ${nQubits}, nStabs: ${nStabs}`);
+    // Filter stabilizers based on type
+    // X-graph: stabilizers containing X or Y (detects Z/Phase errors)
+    // Z-graph: stabilizers containing Z or Y (detects X/Bit errors)
+    const relevantStabs = [];
+    stabilizersRaw.forEach((stab, idx) => {
+        let pauliString = stab.replace(/^[+\-i| ]*/, '');
+        const firstPauliIndex = pauliString.search(/[IXYZ]/);
+        if (firstPauliIndex !== -1) pauliString = pauliString.substring(firstPauliIndex);
+        const cleanPauliString = pauliString.split('').filter(c => 'IXYZ'.includes(c)).join('');
+
+        const hasX = cleanPauliString.includes('X') || cleanPauliString.includes('Y');
+        const hasZ = cleanPauliString.includes('Z') || cleanPauliString.includes('Y');
+
+        if ((typeFilter === 'X' && hasX) || (typeFilter === 'Z' && hasZ)) {
+            relevantStabs.push({
+                originalIdx: idx,
+                cleanPauli: cleanPauliString,
+                isTriggered: triggered.includes(idx)
+            });
+        }
+    });
+
+    const nStabs = relevantStabs.length;
 
     // Set explicit dimensions
-    const containerWidth = svg.parentElement ? svg.parentElement.clientWidth : 800;
-    const width = Math.max(containerWidth - 40, 400);
-    const height = 400;
+    const containerWidth = svg.parentElement ? svg.parentElement.clientWidth : 400;
+    const width = Math.max(containerWidth - 20, 300);
+    const height = 300;
 
     svg.setAttribute("width", width);
     svg.setAttribute("height", height);
     svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
 
-    console.log(`SVG dimensions: ${width}x${height}`);
-
-    const qubitY = 60;
-    const stabY = 340;
-    const margin = 50;
+    const qubitY = 50;
+    const stabY = 250;
+    const margin = 40;
     const qubitXStep = nQubits > 1 ? (width - 2 * margin) / (nQubits - 1) : 0;
     const stabXStep = nStabs > 1 ? (width - 2 * margin) / (nStabs - 1) : 0;
 
-    // 1. Draw Edges - with extremely robust parsing
-    let edgeCount = 0;
+    // 1. Get applied errors
+    const appliedErrors = JSON.parse(window.simulator.getAppliedErrors());
+    const erroredQubitIndices = appliedErrors.map(e => e.qubit);
 
-    stabilizers.forEach((stab, sIdx) => {
-        // Extract ONLY the Pauli operators (I, X, Y, Z)
-        // Remove ALL leading characters that aren't I/X/Y/Z
-        let pauliString = stab;
+    // 2. Draw Edges
+    relevantStabs.forEach((stabInfo, sLocalIdx) => {
+        const cleanPauliString = stabInfo.cleanPauli;
 
-        // Method 1: Remove known prefixes
-        pauliString = pauliString.replace(/^[+\-i| ]*/, '');
-
-        // Method 2: Find first occurrence of valid Pauli and take from there
-        const firstPauliIndex = pauliString.search(/[IXYZ]/);
-        if (firstPauliIndex !== -1) {
-            pauliString = pauliString.substring(firstPauliIndex);
-        }
-
-        // Method 3: Filter to only keep IXYZ characters
-        const cleanPauliString = pauliString.split('').filter(c => 'IXYZ'.includes(c)).join('');
-
-        console.log(`S${sIdx}: "${stab}" → filtered: "${cleanPauliString}"`);
-
-        // Draw edges for non-identity Paulis
         for (let qIdx = 0; qIdx < Math.min(cleanPauliString.length, nQubits); qIdx++) {
             const pauli = cleanPauliString[qIdx];
 
-            if (pauli && pauli !== 'I') {
+            // Only draw edges relevant to the current graph type
+            const isRelevantEdge = (typeFilter === 'X' && (pauli === 'X' || pauli === 'Y')) ||
+                (typeFilter === 'Z' && (pauli === 'Z' || pauli === 'Y'));
+
+            if (pauli && pauli !== 'I' && isRelevantEdge) {
                 const x1 = margin + (nQubits > 1 ? qIdx * qubitXStep : width / 2);
                 const y1 = qubitY;
-                const x2 = margin + (nStabs > 1 ? sIdx * stabXStep : width / 2);
+                const x2 = margin + (nStabs > 1 ? sLocalIdx * stabXStep : width / 2);
                 const y2 = stabY;
 
-                // Create line with EXPLICIT styling
                 const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
                 line.setAttribute("x1", x1);
                 line.setAttribute("y1", y1);
                 line.setAttribute("x2", x2);
                 line.setAttribute("y2", y2);
 
-                // Set BOTH class and direct attributes for maximum compatibility
-                const isTriggered = triggered.includes(sIdx);
-                line.setAttribute("class", `tanner-edge edge-${pauli.toLowerCase()}${isTriggered ? ' edge-triggered' : ''}`);
+                const qubitError = appliedErrors.find(e => e.qubit === qIdx);
+                const errorType = qubitError ? qubitError.error_type : null;
 
-                // Direct style attributes - PRESERVE Pauli color even when triggered
-                let strokeColor = "#666";  // Default gray
+                // Highlight logic: 
+                // X-checks detect Z/Y errors. Z-checks detect X/Y errors.
+                let shouldHighlight = false;
+                if (errorType) {
+                    if (typeFilter === 'X' && (errorType === 'Z' || errorType === 'Y')) shouldHighlight = true;
+                    if (typeFilter === 'Z' && (errorType === 'X' || errorType === 'Y')) shouldHighlight = true;
+                }
+
+                // Add classes for styling
+                let classes = `tanner-edge edge-${pauli.toLowerCase()}`;
+                if (shouldHighlight) classes += ' edge-error';
+                line.setAttribute("class", classes);
+
+                // Direct style attributes
+                let strokeColor = "#ccc";
                 if (pauli === 'X') strokeColor = "#ef5350";
                 else if (pauli === 'Y') strokeColor = "#66bb6a";
                 else if (pauli === 'Z') strokeColor = "#42a5f5";
 
-                // For triggered edges: keep color but add visual emphasis
                 line.setAttribute("stroke", strokeColor);
-                line.setAttribute("stroke-width", isTriggered ? "5" : "2.5");
-                line.setAttribute("stroke-opacity", isTriggered ? "1" : "0.6");
 
-                // Add glow effect for triggered edges
-                if (isTriggered) {
-                    line.setAttribute("filter", "url(#glow)");
-                    line.style.animation = "pulse-edge 1.5s ease-in-out infinite";
+                if (shouldHighlight) {
+                    line.setAttribute("stroke-width", "4");
+                    line.setAttribute("stroke-opacity", "1");
+                    line.style.animation = "pulse-error-edge 2s ease-in-out infinite";
+                } else {
+                    line.setAttribute("stroke-width", "1.5");
+                    line.setAttribute("stroke-opacity", "0.4");
                 }
 
                 svg.appendChild(line);
-
-                console.log(`  ✓ Edge ${edgeCount}: Q${qIdx}(${pauli})--S${sIdx} | (${x1.toFixed(1)},${y1})→(${x2.toFixed(1)},${y2}) | ${strokeColor}${isTriggered ? ' [TRIGGERED]' : ''}`);
-                edgeCount++;
             }
         }
     });
 
-    console.log(`📊 Total edges created: ${edgeCount}`);
-
-    // Add SVG filter for glow effect on triggered edges
-    const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
-    const filter = document.createElementNS("http://www.w3.org/2000/svg", "filter");
-    filter.setAttribute("id", "glow");
-    filter.setAttribute("x", "-50%");
-    filter.setAttribute("y", "-50%");
-    filter.setAttribute("width", "200%");
-    filter.setAttribute("height", "200%");
-
-    const feGaussianBlur = document.createElementNS("http://www.w3.org/2000/svg", "feGaussianBlur");
-    feGaussianBlur.setAttribute("stdDeviation", "2.5");
-    feGaussianBlur.setAttribute("result", "coloredBlur");
-    filter.appendChild(feGaussianBlur);
-
-    const feMerge = document.createElementNS("http://www.w3.org/2000/svg", "feMerge");
-    const feMergeNode1 = document.createElementNS("http://www.w3.org/2000/svg", "feMergeNode");
-    feMergeNode1.setAttribute("in", "coloredBlur");
-    const feMergeNode2 = document.createElementNS("http://www.w3.org/2000/svg", "feMergeNode");
-    feMergeNode2.setAttribute("in", "SourceGraphic");
-    feMerge.appendChild(feMergeNode1);
-    feMerge.appendChild(feMergeNode2);
-    filter.appendChild(feMerge);
-
-    defs.appendChild(filter);
-    svg.insertBefore(defs, svg.firstChild);
-
-    // 2. Draw Qubit Nodes
+    // 3. Draw Qubit Nodes
     for (let i = 0; i < nQubits; i++) {
-        const x = margin + (nQubits > 1 ? i * qubitXStep : (width / 2 - margin));
+        const x = margin + (nQubits > 1 ? i * qubitXStep : width / 2);
         const y = qubitY;
+
+        const qubitError = appliedErrors.find(e => e.qubit === i);
+        const errorType = qubitError ? qubitError.error_type : null;
+
+        // Highlight logic for qubit nodes same as edges
+        let shouldHighlight = false;
+        if (errorType) {
+            if (typeFilter === 'X' && (errorType === 'Z' || errorType === 'Y')) shouldHighlight = true;
+            if (typeFilter === 'Z' && (errorType === 'X' || errorType === 'Y')) shouldHighlight = true;
+        }
 
         const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
         const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
         circle.setAttribute("cx", x);
         circle.setAttribute("cy", y);
-        circle.setAttribute("r", "15");
-        circle.setAttribute("class", "tanner-node qubit-node");
+        circle.setAttribute("r", "14");
+
+        let classes = 'tanner-node qubit-node';
+        if (shouldHighlight) {
+            classes += ` qubit-error qubit-error-${errorType.toLowerCase()}`;
+        }
+        circle.setAttribute("class", classes);
 
         const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
         text.setAttribute("x", x);
-        text.setAttribute("y", y - 25);
+        text.setAttribute("y", y - 22);
         text.setAttribute("text-anchor", "middle");
         text.setAttribute("class", "node-label");
         text.textContent = `q${i}`;
@@ -203,37 +205,62 @@ function updateTannerGraph() {
         svg.appendChild(g);
     }
 
-    // 3. Draw Stabilizer Nodes
-    stabilizers.forEach((_, i) => {
-        const x = margin + (nStabs > 1 ? i * stabXStep : (width / 2 - margin));
+    // 4. Draw Stabilizer Nodes
+    relevantStabs.forEach((stabInfo, i) => {
+        const x = margin + (nStabs > 1 ? i * stabXStep : width / 2);
         const y = stabY;
-        const isTriggered = triggered.includes(i);
+        const isTriggered = stabInfo.isTriggered;
 
         const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
         const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-        rect.setAttribute("x", x - 15);
-        rect.setAttribute("y", y - 15);
-        rect.setAttribute("width", "30");
-        rect.setAttribute("height", "30");
-        rect.setAttribute("rx", "4");
+        rect.setAttribute("x", x - 12);
+        rect.setAttribute("y", y - 12);
+        rect.setAttribute("width", "24");
+        rect.setAttribute("height", "24");
+        rect.setAttribute("rx", "3");
         rect.setAttribute("class", `tanner-node stab-node ${isTriggered ? 'stab-triggered' : ''}`);
 
         const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
         text.setAttribute("x", x);
-        text.setAttribute("y", y + 35);
+        text.setAttribute("y", y + 30);
         text.setAttribute("text-anchor", "middle");
         text.setAttribute("class", "node-label");
-        text.textContent = `S${i}`;
+        text.textContent = `S${stabInfo.originalIdx}`;
 
         g.appendChild(rect);
         g.appendChild(text);
         svg.appendChild(g);
     });
+
+    // Add filter if it doesn't exist
+    if (!document.getElementById("glow-filter")) {
+        const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
+        const filter = document.createElementNS("http://www.w3.org/2000/svg", "filter");
+        filter.setAttribute("id", "glow-filter");
+        filter.setAttribute("x", "-50%"); filter.setAttribute("y", "-50%");
+        filter.setAttribute("width", "200%"); filter.setAttribute("height", "200%");
+        const feGaussianBlur = document.createElementNS("http://www.w3.org/2000/svg", "feGaussianBlur");
+        feGaussianBlur.setAttribute("stdDeviation", "2.5");
+        feGaussianBlur.setAttribute("result", "coloredBlur");
+        filter.appendChild(feGaussianBlur);
+        const feMerge = document.createElementNS("http://www.w3.org/2000/svg", "feMerge");
+        const feMergeNode1 = document.createElementNS("http://www.w3.org/2000/svg", "feMergeNode");
+        feMergeNode1.setAttribute("in", "coloredBlur");
+        const feMergeNode2 = document.createElementNS("http://www.w3.org/2000/svg", "feMergeNode");
+        feMergeNode2.setAttribute("in", "SourceGraphic");
+        feMerge.appendChild(feMergeNode1); feMerge.appendChild(feMergeNode2);
+        filter.appendChild(feMerge);
+        defs.appendChild(filter);
+        svg.insertBefore(defs, svg.firstChild);
+    }
 }
 
 // Ensure resize handling
 window.addEventListener('resize', () => {
-    if (window.simulator) updateTannerGraph();
+    if (window.simulator) {
+        updateTannerGraph("tanner-graph-svg-x", "X");
+        updateTannerGraph("tanner-graph-svg-z", "Z");
+    }
 });
 
 // Update error injection controls based on qubit count
