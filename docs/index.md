@@ -40,8 +40,20 @@
 
     量子ビットを制御・最適化するための測定や調整手法について。
 
-    [:octicons-arrow-right-24: 手法一覧を見る](calibration/index.md)  
-    [:octicons-arrow-right-24: ラビ振動](calibration/rabi.md)
+    [:octicons-arrow-right-24: 手法概要](calibration/index.md)  
+    [:octicons-arrow-right-24: ラビ振動](calibration/rabi.md)  
+    [:octicons-arrow-right-24: 1量子ビットゲート (DRAG)](calibration/single_qubit_gates.md)  
+    [:octicons-arrow-right-24: 読み出し調整](calibration/readout.md)  
+    [:octicons-arrow-right-24: 2量子ビットゲート (CR)](calibration/two_qubit_gates.md)
+
+-   :material-tools:{ .lg .middle } __ツール__
+
+    ---
+
+    キャリブレーションを自動化・管理するためのソフトウェア。
+
+    [:octicons-arrow-right-24: QDash](calibration/qdash.md)  
+    [:octicons-arrow-right-24: Qubex](calibration/qubex.md)
 
 </div>
 

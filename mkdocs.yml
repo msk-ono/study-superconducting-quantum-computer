@@ -66,4 +66,11 @@ nav:
     - Principles: superconducting/principle.md
   - Calibration:
     - Overview: calibration/index.md
-    - Rabi Oscillations: calibration/rabi.md
+    - Methods:
+      - Rabi Oscillations: calibration/rabi.md
+      - Single Qubit Gates: calibration/single_qubit_gates.md
+      - Readout: calibration/readout.md
+      - Two Qubit Gates: calibration/two_qubit_gates.md
+    - Software:
+      - QDash: calibration/qdash.md
+      - Qubex: calibration/qubex.md
