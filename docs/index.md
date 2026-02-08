@@ -1,5 +1,9 @@
 # 超伝導量子コンピュータ学習ノート
 
+<p align="left">
+  <img src="https://github.com/msk-ono/study-superconducting-quantum-computer/actions/workflows/deploy.yml/badge.svg" alt="Deploy to GitHub Pages">
+</p>
+
 超伝導回路を用いた量子コンピュータの仕組み、理論、そして実機でのキャリブレーション手法について学んだ内容をまとめています。
 
 ## 🎯 本サイトの目的
