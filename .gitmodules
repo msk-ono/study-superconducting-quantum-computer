@@ -4,3 +4,9 @@
 [submodule "externals/qubex"]
 	path = externals/qubex
 	url = https://github.com/amachino/qubex.git
+[submodule "externals/scqubits"]
+	path = externals/scqubits
+	url = https://github.com/scqubits/scqubits.git
+[submodule "externals/SQcircuit"]
+	path = externals/SQcircuit
+	url = https://github.com/stanfordLINQS/SQcircuit.git
