@@ -82,5 +82,5 @@ nav:
       - Readout: calibration/readout.md
       - Two Qubit Gates: calibration/two_qubit_gates.md
     - Software:
-      - QDash: calibration/qdash.md
-      - Qubex: calibration/qubex.md
+      - QDash: software/qdash.md
+      - Qubex: software/qubex.md

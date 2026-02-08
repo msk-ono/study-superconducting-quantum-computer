@@ -56,8 +56,8 @@
 
     キャリブレーションを自動化・管理するためのソフトウェア。
 
-    [:octicons-arrow-right-24: QDash](calibration/qdash.md)  
-    [:octicons-arrow-right-24: Qubex](calibration/qubex.md)
+    [:octicons-arrow-right-24: QDash](software/qdash.md)  
+    [:octicons-arrow-right-24: Qubex](software/qubex.md)
 
 </div>
 
