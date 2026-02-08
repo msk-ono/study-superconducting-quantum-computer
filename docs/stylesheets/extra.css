@@ -1,0 +1,176 @@
+/* 
+ * Superconducting Quantum Computer Study Notes Theme
+ * Designed for readability of complex mathematical formulas and a modern, scientific aesthetic.
+ */
+
+:root {
+    /* 
+   * Quantum Theme Colors 
+   * Using Indigo as primary (deep, serious) and Cyan/Teal as accent (superconducting/cryogenic feel).
+   */
+    --md-primary-fg-color: #3949ab;
+    /* Indigo 600 */
+    --md-primary-fg-color--light: #5c6bc0;
+    /* Indigo 400 */
+    --md-primary-fg-color--dark: #283593;
+    /* Indigo 800 */
+    --md-accent-fg-color: #00acc1;
+    /* Cyan 600 */
+
+    /* Text adjustments */
+    --md-text-font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    --md-code-font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+}
+
+/* =========================================
+   Layout Adjustments
+   ========================================= */
+
+/* Make the specific content area wider for large screens to accommodate long equations */
+@media screen and (min-width: 1220px) {
+    .md-grid {
+        max-width: 90vw;
+        /* Use most of the screen width */
+        margin-right: auto;
+        margin-left: auto;
+    }
+
+    .md-sidebar--primary {
+        left: 1rem;
+    }
+
+    .md-sidebar--secondary {
+        right: 1rem;
+    }
+}
+
+/* Increase basic font size significantly for readability as requested (approx 125% of default) */
+html {
+    font-size: 20px;
+}
+
+[data-md-color-scheme="default"] {
+    --md-primary-fg-color: #283593;
+    /* Deeper Indigo for more contrast */
+    --md-default-bg-color: #fcfcfd;
+    /* Paper-like off-white */
+    --md-default-fg-color: #263238;
+    /* Slightly darker text for contrast */
+}
+
+body {
+    line-height: 1.8;
+    /* Increased breathing room */
+}
+
+/* Add a subtle paper-like background pattern to the main content for "study note" feel */
+.md-content {
+    background-image:
+        linear-gradient(rgba(0, 172, 193, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 172, 193, 0.05) 1px, transparent 1px);
+    background-size: 50px 50px;
+    /* Large subtle grid reminding of laboratory notebooks */
+    background-attachment: local;
+    border-radius: 8px;
+}
+
+/* =========================================
+   Typography & Thematic Elements
+   ========================================= */
+
+/* Headers - "Quantum Circuit" Style */
+.md-typeset h1 {
+    color: var(--md-primary-fg-color--dark);
+    font-weight: 700;
+    border-bottom: 2px solid var(--md-accent-fg-color);
+    padding-bottom: 0.3em;
+    margin-bottom: 1em;
+    letter-spacing: -0.02em;
+}
+
+.md-typeset h2 {
+    color: var(--md-primary-fg-color);
+    font-weight: 600;
+    border-left: 5px solid var(--md-accent-fg-color);
+    padding-left: 0.6em;
+    margin-top: 2em;
+    margin-bottom: 1em;
+    background: linear-gradient(90deg, rgba(0, 172, 193, 0.08) 0%, rgba(255, 255, 255, 0) 100%);
+    border-radius: 0 4px 4px 0;
+}
+
+.md-typeset h3 {
+    color: var(--md-primary-fg-color--light);
+    font-weight: 600;
+    margin-top: 1.5em;
+    border-bottom: 1px dotted var(--md-accent-fg-color);
+    display: inline-block;
+    padding-bottom: 0.2em;
+}
+
+/* =========================================
+   Mathematical Formulas (MathJax)
+   ========================================= */
+
+/* Ensure math formulas scroll if they are too long, instead of breaking layout */
+.md-typeset .arithmatex,
+.md-typeset .MathJax,
+mjx-container {
+    overflow-x: auto;
+    overflow-y: hidden;
+    max-width: 100%;
+}
+
+/* Make block equations slightly clearer */
+.md-typeset .arithmatex.display {
+    background-color: rgba(0, 0, 0, 0.02);
+    padding: 0.5em;
+    border-radius: 8px;
+    margin: 1em 0;
+    text-align: center;
+}
+
+/* =========================================
+   Code Blocks & Admonitions
+   ========================================= */
+
+/* Cleaner code blocks */
+.md-typeset pre>code {
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Admonitions styling to look like sticky notes */
+.md-typeset .admonition {
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    border-left-width: 5px;
+}
+
+/* =========================================
+   Dark Mode Specifics
+   ========================================= */
+
+[data-md-color-scheme="slate"] {
+    --md-primary-fg-color: #7986cb;
+    /* Lighter Indigo */
+    --md-accent-fg-color: #4dd0e1;
+    /* Lighter Cyan */
+
+    /* Update background for h2 gradient in dark mode */
+    .md-typeset h2 {
+        background: linear-gradient(90deg, rgba(77, 208, 225, 0.15) 0%, rgba(0, 0, 0, 0) 100%);
+    }
+
+    /* Math background in dark mode */
+    .md-typeset .arithmatex.display {
+        background-color: rgba(255, 255, 255, 0.03);
+    }
+
+    /* Code block adjustments for dark mode */
+    .md-typeset pre>code {
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+}
