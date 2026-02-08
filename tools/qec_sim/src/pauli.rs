@@ -11,9 +11,9 @@ pub enum Pauli {
 /// Phase factor for Pauli operators: ±1, ±i
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Phase {
-    Plus,  // +1
-    Minus, // -1
-    PlusI, // +i
+    Plus,   // +1
+    Minus,  // -1
+    PlusI,  // +i
     MinusI, // -i
 }
 
@@ -205,7 +205,7 @@ mod tests {
         let p1 = PauliString::from_str("XY").unwrap();
         let p2 = PauliString::from_str("YZ").unwrap();
         let result = p1.multiply(&p2);
-        
+
         // XY * YZ = X(YY)Z = X(I)Z = -iXZ
         assert_eq!(result.phase, Phase::MinusI);
         assert_eq!(result.paulis, vec![Pauli::Z, Pauli::X]);

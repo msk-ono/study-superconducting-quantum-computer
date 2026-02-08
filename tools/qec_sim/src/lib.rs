@@ -1,13 +1,13 @@
 use wasm_bindgen::prelude::*;
 
+mod codes;
+mod error;
 mod pauli;
 mod stabilizer;
-mod error;
-mod codes;
 
-use crate::stabilizer::StabilizerState;
+use crate::codes::{available_codes, get_code_by_name, get_code_info};
 use crate::error::{Error, ErrorType, Syndrome};
-use crate::codes::{get_code_by_name, get_code_info, available_codes};
+use crate::stabilizer::StabilizerState;
 
 /// Initialize panic hook for better error messages in browser console
 #[wasm_bindgen(start)]
@@ -30,7 +30,7 @@ impl QECSimulator {
     pub fn new(code_name: &str) -> Result<QECSimulator, JsValue> {
         let state = get_code_by_name(code_name)
             .ok_or_else(|| JsValue::from_str(&format!("Unknown code: {}", code_name)))?;
-        
+
         Ok(QECSimulator {
             state,
             applied_errors: Vec::new(),
@@ -46,7 +46,8 @@ impl QECSimulator {
     /// Get stabilizers as JSON string
     #[wasm_bindgen(js_name = getStabilizers)]
     pub fn get_stabilizers(&self) -> String {
-        let stabs: Vec<String> = self.state
+        let stabs: Vec<String> = self
+            .state
             .get_all_stabilizers()
             .iter()
             .map(|s| s.to_string())
@@ -64,12 +65,12 @@ impl QECSimulator {
 
         // First, remove any existing error on this qubit
         self.applied_errors.retain(|e| e.qubit != qubit);
-        
+
         // Reset state and reapply all remaining errors
         let code_name = self.get_code_name();
         self.state = get_code_by_name(&code_name)
             .ok_or_else(|| JsValue::from_str("Failed to reset state"))?;
-        
+
         for error in &self.applied_errors {
             error.apply_to_state(&mut self.state);
         }
@@ -115,7 +116,7 @@ impl QECSimulator {
     pub fn reset(&mut self, code_name: &str) -> Result<(), JsValue> {
         let state = get_code_by_name(code_name)
             .ok_or_else(|| JsValue::from_str(&format!("Unknown code: {}", code_name)))?;
-        
+
         self.state = state;
         self.applied_errors.clear();
         Ok(())
@@ -126,20 +127,20 @@ impl QECSimulator {
     pub fn clear_qubit_error(&mut self, qubit: usize) -> Result<(), JsValue> {
         // Remove all errors affecting this qubit
         self.applied_errors.retain(|e| e.qubit != qubit);
-        
+
         // Reset state and reapply remaining errors
         let code_name = self.get_code_name();
         self.state = get_code_by_name(&code_name)
             .ok_or_else(|| JsValue::from_str("Failed to reset state"))?;
-        
+
         // Reapply remaining errors
         for error in &self.applied_errors {
             error.apply_to_state(&mut self.state);
         }
-        
+
         Ok(())
     }
-    
+
     /// Helper to get current code name
     fn get_code_name(&self) -> String {
         // Infer code name from number of qubits and stabilizers

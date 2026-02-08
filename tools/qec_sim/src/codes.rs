@@ -13,13 +13,13 @@ pub fn repetition_code_3() -> StabilizerState {
         PauliString::from_str("ZZI").unwrap(),
         PauliString::from_str("IZZ").unwrap(),
     ];
-    
+
     // Note: This is a distance-3 code, but only detects 1 bit flip
     // We initialize with 2 stabilizers for 3 qubits (encodes 1 logical qubit)
     let mut state = StabilizerState::new(3);
     state.set_stabilizer(0, &stabilizers[0]);
     state.set_stabilizer(1, &stabilizers[1]);
-    
+
     state
 }
 
@@ -33,12 +33,12 @@ pub fn five_qubit_code() -> StabilizerState {
         PauliString::from_str("XIXZZ").unwrap(),
         PauliString::from_str("ZXIXZ").unwrap(),
     ];
-    
+
     let mut state = StabilizerState::new(5);
     for (i, stab) in stabilizers.iter().enumerate() {
         state.set_stabilizer(i, stab);
     }
-    
+
     state
 }
 
@@ -54,12 +54,12 @@ pub fn steane_code() -> StabilizerState {
         PauliString::from_str("IZZIIZZ").unwrap(),
         PauliString::from_str("ZIZIZIZ").unwrap(),
     ];
-    
+
     let mut state = StabilizerState::new(7);
     for (i, stab) in stabilizers.iter().enumerate() {
         state.set_stabilizer(i, stab);
     }
-    
+
     state
 }
 
@@ -70,27 +70,27 @@ pub fn steane_code() -> StabilizerState {
 ///  3 - 4 - 5
 ///  |   |   |
 ///  6 - 7 - 8
-/// 
+///
 /// 4 X-type stabilizers (on faces) and 4 Z-type stabilizers (on vertices)
 pub fn surface_code_d3() -> StabilizerState {
     // X stabilizers (plaquettes)
     let stabilizers = vec![
-        PauliString::from_str("XXIIIIIII").unwrap(),  // 0-1
-        PauliString::from_str("IXIIXIIII").unwrap(),  // 1-2-4
-        PauliString::from_str("IIIXXXXII").unwrap(),  // 3-4-6-7
-        PauliString::from_str("IIIIIIXIX").unwrap(),  // 5-7-8
+        PauliString::from_str("XXIIIIIII").unwrap(), // 0-1
+        PauliString::from_str("IXIIXIIII").unwrap(), // 1-2-4
+        PauliString::from_str("IIIXXXXII").unwrap(), // 3-4-6-7
+        PauliString::from_str("IIIIIIXIX").unwrap(), // 5-7-8
         // Z stabilizers (vertices)
-        PauliString::from_str("ZIIZIIIII").unwrap(),  // 0-3
-        PauliString::from_str("IZIZIZIII").unwrap(),  // 1-3-4-6
-        PauliString::from_str("IIZIIIZIZ").unwrap(),  // 2-4-5-7
-        PauliString::from_str("IIIIIIZZI").unwrap(),  // 5-8
+        PauliString::from_str("ZIIZIIIII").unwrap(), // 0-3
+        PauliString::from_str("IZIZIZIII").unwrap(), // 1-3-4-6
+        PauliString::from_str("IIZIIIZIZ").unwrap(), // 2-4-5-7
+        PauliString::from_str("IIIIIIZZI").unwrap(), // 5-8
     ];
-    
+
     let mut state = StabilizerState::new(9);
     for (i, stab) in stabilizers.iter().enumerate() {
         state.set_stabilizer(i, stab);
     }
-    
+
     state
 }
 
@@ -161,7 +161,7 @@ mod tests {
     fn test_repetition_code() {
         let state = repetition_code_3();
         let stabs = state.get_all_stabilizers();
-        
+
         assert_eq!(stabs.len(), 3);
         assert_eq!(stabs[0].to_string(), "ZZI");
         assert_eq!(stabs[1].to_string(), "IZZ");
@@ -171,7 +171,7 @@ mod tests {
     fn test_five_qubit_code() {
         let state = five_qubit_code();
         let stabs = state.get_all_stabilizers();
-        
+
         assert_eq!(stabs.len(), 5);
         // Verify stabilizers commute
         for i in 0..stabs.len() {

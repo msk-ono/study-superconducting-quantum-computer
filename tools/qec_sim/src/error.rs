@@ -5,9 +5,9 @@ use serde::{Deserialize, Serialize};
 /// Error types that can be applied to qubits
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum ErrorType {
-    X,  // Bit flip
-    Y,  // Bit + phase flip
-    Z,  // Phase flip
+    X, // Bit flip
+    Y, // Bit + phase flip
+    Z, // Phase flip
 }
 
 /// Represents an error on a specific qubit
@@ -28,7 +28,7 @@ impl Error {
         match self.error_type {
             ErrorType::X => {
                 // X is H-Z-H, or we can implement directly
-                // For stabilizer formalism, X flips the sign of any stabilizer 
+                // For stabilizer formalism, X flips the sign of any stabilizer
                 // that has Z on this qubit
                 for i in 0..state.n_qubits() {
                     if state.get_stabilizer(i).paulis[self.qubit] == Pauli::Z
@@ -112,16 +112,16 @@ mod tests {
     fn test_error_detection() {
         let mut state = StabilizerState::new(3);
         // Initial state |000⟩ with stabilizers ZII, IZI, IIZ
-        
+
         // No errors
         let syndrome = Syndrome::from_state(&state);
         assert!(!syndrome.has_error());
         assert_eq!(syndrome.outcomes, vec![1, 1, 1]);
-        
+
         // Apply X error on qubit 0
         let error = Error::new(0, ErrorType::X);
         error.apply_to_state(&mut state);
-        
+
         // Should trigger stabilizer 0 (ZII)
         let syndrome = Syndrome::from_state(&state);
         assert!(syndrome.has_error());
@@ -131,14 +131,14 @@ mod tests {
     #[test]
     fn test_multiple_errors() {
         let mut state = StabilizerState::new(3);
-        
+
         // Apply errors on qubits 0 and 2
         Error::new(0, ErrorType::Z).apply_to_state(&mut state);
         Error::new(2, ErrorType::X).apply_to_state(&mut state);
-        
+
         let syndrome = Syndrome::from_state(&state);
         let triggered = syndrome.triggered_stabilizers();
-        
+
         // Should trigger stabilizers for qubits 0 and 2
         assert!(triggered.contains(&2));
     }
