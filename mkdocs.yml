@@ -81,6 +81,8 @@ nav:
       - Single Qubit Gates: calibration/single_qubit_gates.md
       - Readout: calibration/readout.md
       - Two Qubit Gates: calibration/two_qubit_gates.md
-    - Software:
-      - QDash: software/qdash.md
-      - Qubex: software/qubex.md
+  - Software:
+    - QDash: software/qdash.md
+    - Qubex: software/qubex.md
+    - scqubits: software/scqubits.md
+    - SQCircuit: software/sqcircuit.md
