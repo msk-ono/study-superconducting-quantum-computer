@@ -56,15 +56,21 @@ extra_javascript:
   - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
   - https://unpkg.com/three@0.160.0/build/three.min.js
   - javascripts/bloch.js
+  - type: module
+    path: javascripts/qec_visualizer.js
 
 extra_css:
   - stylesheets/extra.css
+  - stylesheets/qec.css
 
 nav:
   - Home: index.md
   - Basic:
     - Overview: basic/index.md
     - Bloch Sphere: basic/bloch.md
+  - QEC:
+    - Overview: qec/index.md
+    - Stabilizer Demo: qec/stabilizer_demo.md
   - Superconducting:
     - Overview: superconducting/index.md
     - Principles: superconducting/principle.md
