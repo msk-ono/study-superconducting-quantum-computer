@@ -13,6 +13,7 @@ H_{\text{lab}} = \hbar \omega_q a^\dagger a + \frac{\hbar \alpha}{2} a^\dagger a
 $$
 
 ここで、
+
 - $\omega_q$: 量子ビット周波数 ($|0\rangle \to |1\rangle$ 遷移周波数)
 - $\alpha$: 非調和性 (Anharmonicity, $\alpha = \omega_{12} - \omega_{01}$)。通常トランスモンでは負の値 ($\approx -300$ MHz) をとります。
 - $a^\dagger, a$: 生成・消滅演算子
@@ -42,6 +43,7 @@ $$
 $$
 H_{\text{Rabi}} = \frac{\hbar \Omega}{2} \sigma_x
 $$
+
 (ここで $\phi=0$ としました)
 
 このハミルトニアンによる時間発展を解くと、励起状態の占有確率は以下のように振動します。
